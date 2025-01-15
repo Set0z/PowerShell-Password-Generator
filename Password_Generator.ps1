@@ -1,4 +1,4 @@
-﻿#Объявление глобальных переменных
+#Объявление глобальных переменных
 $host.ui.RawUI.WindowTitle = "Password Generator"
 $pos = 1
 $symbols = $false
@@ -78,13 +78,24 @@ function Gen-Password {
     # Заданные специальные символы
     $symbols = @('!', '@', '#', '$', '%', '&', '?')
 
+    # Группы символов для генерации пароля
+    $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    $digits = '0123456789'
+
     for ($i = 1; $i -le $Lengthpass; $i++) {
-        if ($Symbolpass -and (Get-Random -Minimum 0 -Maximum 2) -eq 1) {
+        if ($Symbolpass -and (Get-Random -Minimum 0 -Maximum 4) -eq 0) {
             # Случайный специальный символ
             $randomchar = $symbols[(Get-Random -Minimum 0 -Maximum $symbols.Length)]
+        } elseif ($Symbolpass -and (Get-Random -Minimum 0 -Maximum 4) -eq 1) {
+            # Случайная буква
+            $randomchar = $letters[(Get-Random -Minimum 0 -Maximum $letters.Length)]
         } else {
-            # Случайная цифра
-            $randomchar = [char](Get-Random -Minimum 48 -Maximum 58)
+            # Случайная буква или цифра (если символы выключены)
+            if (Get-Random -Minimum 0 -Maximum 2) {
+                $randomchar = $letters[(Get-Random -Minimum 0 -Maximum $letters.Length)]
+            } else {
+                $randomchar = $digits[(Get-Random -Minimum 0 -Maximum $digits.Length)]
+            }
         }
 
         $password += $randomchar
@@ -99,6 +110,10 @@ function Gen-Password {
 
     return -join $password  # Преобразуем массив в строку
 }
+
+
+
+
 
 
 function Draw-Menu{
