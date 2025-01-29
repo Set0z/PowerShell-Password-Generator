@@ -1,10 +1,8 @@
-#Объявление глобальных переменных
 $host.ui.RawUI.WindowTitle = "Password Generator"
 $pos = 1
 $symbols = $false
 $lenght = 0
 
-#Debug мод
 $DebugMode = $false
 
 
@@ -16,30 +14,23 @@ function Set-ConsoleSizeAndColor {
         [ConsoleColor]$ForegroundColor = 'White'
     )
 
-    # Устанавливаем цвет фона и текста
     [console]::BackgroundColor = $BackgroundColor
     [console]::ForegroundColor = $ForegroundColor
 
-    # Очистка консоли для применения цвета фона
     Clear-Host
 
-    # Получаем максимальные размеры окна
     $maxWidth = [console]::LargestWindowWidth
     $maxHeight = [console]::LargestWindowHeight
 
-    # Ограничиваем размеры окна
     $finalWidth = [math]::Min($Width, $maxWidth)
     $finalHeight = [math]::Min($Height, $maxHeight)
 
-    # Устанавливаем размеры окна
     [console]::WindowWidth = $finalWidth
     [console]::WindowHeight = $finalHeight
 
-    # Устанавливаем размеры буфера
     [console]::BufferWidth = $finalWidth
     [console]::BufferHeight = $finalHeight
 
-    # Полностью очищаем буфер с новым фоном
     Clear-Host
 }
 
@@ -49,19 +40,14 @@ function Center-Text {
         [string]$Text
     )
 
-    # Удаляем управляющие последовательности (цветовые коды ANSI)
     $cleanText = $Text -replace '\x1b\[[0-9;]*m', ''
 
-    # Получаем ширину консоли
     $consoleWidth = [console]::WindowWidth
 
-    # Вычисляем количество пробелов для отступа
     $padding = [math]::Max(0, ($consoleWidth - $cleanText.Length) / 2)
 
-    # Формируем строку с отступом
     $centeredText = " " * [math]::Floor($padding) + $Text
 
-    # Выводим текст
     Write-Host $centeredText
 }
 
@@ -72,25 +58,20 @@ function Gen-Password {
         [bool]$Symbolpass
     )
     
-    $password = @()  # Массив для накопления символов
-    $group_counter = 0  # Счётчик символов в текущей группе
+    $password = @() 
+    $group_counter = 0  
 
-    # Заданные специальные символы
     $symbols = @('!', '@', '#', '$', '%', '&', '?')
 
-    # Группы символов для генерации пароля
     $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     $digits = '0123456789'
 
     for ($i = 1; $i -le $Lengthpass; $i++) {
         if ($Symbolpass -and (Get-Random -Minimum 0 -Maximum 4) -eq 0) {
-            # Случайный специальный символ
             $randomchar = $symbols[(Get-Random -Minimum 0 -Maximum $symbols.Length)]
         } elseif ($Symbolpass -and (Get-Random -Minimum 0 -Maximum 4) -eq 1) {
-            # Случайная буква
             $randomchar = $letters[(Get-Random -Minimum 0 -Maximum $letters.Length)]
         } else {
-            # Случайная буква или цифра (если символы выключены)
             if (Get-Random -Minimum 0 -Maximum 2) {
                 $randomchar = $letters[(Get-Random -Minimum 0 -Maximum $letters.Length)]
             } else {
@@ -101,14 +82,13 @@ function Gen-Password {
         $password += $randomchar
         $group_counter++
 
-        # Добавляем дефис после каждых 3 символов, если это не последний символ
         if ($group_counter -eq 3 -and $i -ne $Lengthpass) {
             $password += "-"
             $group_counter = 0
         }
     }
 
-    return -join $password  # Преобразуем массив в строку
+    return -join $password  
 }
 
 
@@ -125,9 +105,8 @@ function Draw-Menu{
     Write-Host "`n`n"
     Center-Text "PowerShell Password Generator"
     Write-Host ""
-    Center-Text "For simple password generation only!"
-    Center-Text "(not secure)"
-    Write-Host "`n`n`n"
+    Center-Text "For simple password generation"
+    Write-Host "`n`n`n`n"
 
     if ($Position -eq 1){
         Center-Text "$([char]27)[48;5;13m$([char]27)[38;5;0m[1]$([char]27)[48;5;0m$([char]27)[38;5;13m Generate  [2] $(if ($lenght -eq 0) {"___"} else {"$([char]27)[48;5;0m$([char]27)[38;5;13;4m$lenght$([char]27)[24m"})  $(if($Symbols -eq $false) {"[ ]"} else {"[*]"}) Allow special symbols"
@@ -147,17 +126,15 @@ function Draw-Menu{
 
 
 
-#                                                                                            Начало
 
 
 
 Set-ConsoleSizeAndColor -Width 75 -Height 20 -BackgroundColor Black -ForegroundColor Magenta
 Draw-Menu -Position 1 -Symbols $false -Symbolpass
 
-#Цикл отрисовки и считывания нажатий
 do {
 
-    $choice = [Console]::ReadKey($true).Key #считывание нажатия
+    $choice = [Console]::ReadKey($true).Key 
 
     if ($DebugMode -eq $true){
         Write-Host "$choice"
@@ -230,4 +207,4 @@ do {
             Write-Host "Lenght: $lenght"
         }
     }
-} until ($choice -eq "Escape") #Выход из программы
+} until ($choice -eq "Escape") 
