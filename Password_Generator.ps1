@@ -104,9 +104,9 @@ function Draw-Menu{
     Clear-Host
     Write-Host "`n`n"
     Center-Text "PowerShell Password Generator"
-    Write-Host ""
+    Write-Host "`n"
     Center-Text "For simple password generation"
-    Write-Host "`n`n`n`n"
+    Write-Host "`n`n`n"
 
     if ($Position -eq 1){
         Center-Text "$([char]27)[48;5;13m$([char]27)[38;5;0m[1]$([char]27)[48;5;0m$([char]27)[38;5;13m Generate  [2] $(if ($lenght -eq 0) {"___"} else {"$([char]27)[48;5;0m$([char]27)[38;5;13;4m$lenght$([char]27)[24m"})  $(if($Symbols -eq $false) {"[ ]"} else {"[*]"}) Allow special symbols"
