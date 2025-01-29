@@ -104,7 +104,9 @@ function Draw-Menu{
     Clear-Host
     Write-Host "`n`n"
     Center-Text "PowerShell Password Generator"
-    Write-Host "`n"
+    Write-Host ""
+    Center-Text "$([char]27)[48;5;0m$([char]27)[38;5;13;4mUse A, D, Spacebar or Enter$([char]27)[24m"
+    Write-Host
     Center-Text "For simple password generation"
     Write-Host "`n`n`n"
 
@@ -143,7 +145,10 @@ do {
 
     if (($pos -eq 1) -and (($choice -eq "Enter")-or ($choice -eq "Spacebar"))){
         Draw-Menu -Position $pos -Symbols $symbols
-        Center-Text "$(Gen-Password -Lengthpass $lenght -Symbolpass $symbols)"
+        $pass = Gen-Password -Lengthpass $lenght -Symbolpass $symbols
+        if ($pass -ne ""){$pass | Set-Clipboard}
+        Center-Text "$pass"
+
     }
 
     if (($pos -eq 2) -and ($choice -ne "A") -and ($choice -ne "D")){
